@@ -3,9 +3,13 @@ const fs = require('fs');
 const path = require('path');
 
 const PORT = process.env.PORT || 3000;
-const STATE_FILE = path.join(__dirname, 'state.json');
 const LETTER_FILE = path.join(__dirname, 'letter.txt');
 const PUBLIC_DIR = path.join(__dirname, 'public');
+
+// API remota para guardar el estado permanentemente en la nube
+const KV_KEY = "y7hf8ehg";
+const KV_READ_URL = `https://keyvalue.immanuel.co/api/KeyVal/GetValue/${KV_KEY}/viewed`;
+const KV_WRITE_URL = `https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/${KV_KEY}/viewed/`;
 
 // Helper to serve static files
 function serveStaticFile(res, urlPath) {
@@ -33,26 +37,26 @@ function serveStaticFile(res, urlPath) {
     });
 }
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
     const urlPathname = req.url.split('?')[0];
 
     if (urlPathname === '/') {
-        // Read current state
-        let state = { viewed: false };
+        // Leer estado desde la base de datos remota en vez del archivo local
+        let viewed = false;
         try {
-            if (fs.existsSync(STATE_FILE)) {
-                state = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
-            }
+            const response = await fetch(KV_READ_URL);
+            const val = await response.json();
+            viewed = (val === "true" || val === true);
         } catch (e) {
-            console.error("Error reading state.json", e);
+            console.error("Error leyendo estado remoto", e);
         }
 
-        if (!state.viewed) {
-            // Mark as viewed
+        if (!viewed) {
+            // Marcar como visto permanentemente en la nube
             try {
-                fs.writeFileSync(STATE_FILE, JSON.stringify({ viewed: true }, null, 2), 'utf8');
+                await fetch(KV_WRITE_URL + "true", { method: 'POST' });
             } catch (e) {
-                console.error("Error writing state.json", e);
+                console.error("Error guardando estado remoto", e);
             }
 
             // Read letter content
