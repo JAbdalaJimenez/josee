@@ -1,0 +1,275 @@
+:root {
+    --primary-bg: #f3e8ff;
+    --card-bg: rgba(255, 255, 255, 0.75);
+    --card-border: rgba(255, 255, 255, 0.5);
+    --text-color: #3b2a4a;
+    --accent: #9b6b9e;
+    --shadow: rgba(155, 107, 158, 0.2);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: 'Lora', serif;
+    color: var(--text-color);
+    overflow-x: hidden;
+}
+
+/* --- Letter Page Styles --- */
+.letter-page {
+    background: linear-gradient(135deg, #f5e6ff 0%, #e6ccff 100%);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.tulips-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.tulip {
+    position: absolute;
+    /* Static positioning, no animation */
+}
+
+.card-container {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+    width: 100%;
+    animation: fadeIn 2s ease-out forwards;
+}
+
+.card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 4rem 3rem;
+    box-shadow: 0 20px 40px var(--shadow), inset 0 0 0 1px rgba(255,255,255,0.8);
+    position: relative;
+    text-align: center;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border: 2px dashed rgba(155, 107, 158, 0.3);
+    border-radius: 24px;
+    pointer-events: none;
+}
+
+.card-content {
+    font-size: 1.25rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+}
+
+.card-content p {
+    margin-bottom: 1.5rem;
+}
+
+.card-content p:first-child {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.5rem;
+    color: var(--accent);
+    margin-bottom: 2rem;
+}
+
+.seal {
+    font-size: 2.5rem;
+    color: var(--accent);
+    margin-top: 1rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
+}
+
+/* --- Error Page Styles --- */
+.error-page {
+    background: #2a2a2a;
+    color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+}
+
+.error-container {
+    max-width: 500px;
+    animation: fadeInError 1s ease-out;
+}
+
+.error-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+    filter: grayscale(80%);
+}
+
+.error-container h1 {
+    font-family: 'Lora', serif;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 400;
+    letter-spacing: 1px;
+}
+
+.error-container p {
+    color: #aaa;
+    line-height: 1.6;
+    font-size: 1.1rem;
+}
+
+@keyframes fadeInError {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive general (Tablets) */
+@media (max-width: 768px) {
+    .card-container {
+        padding: 2rem 1rem;
+    }
+    .card {
+        padding: 3rem 2rem;
+        border-radius: 15px;
+    }
+    .card-content {
+        font-size: 1.15rem;
+    }
+}
+
+/* Responsive específico para móviles modernos (iPhone 15/16) */
+@media (max-width: 430px) {
+    body {
+        padding: 0;
+    }
+    .card-container {
+        padding: 1rem 0.5rem;
+        align-items: flex-start; /* Para que la carta no quede tan centrada si es muy larga */
+        padding-top: 2rem;
+    }
+    .card {
+        padding: 2.5rem 1.25rem 2rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px var(--shadow);
+    }
+    .card-content {
+        font-size: 1.05rem; /* Letra un poco más ajustada para no forzar scroll infinito */
+        line-height: 1.6;
+    }
+    .card-content p:first-child {
+        font-size: 1.75rem;
+    }
+    .seal {
+        bottom: 15px;
+        right: 15px;
+        font-size: 2rem;
+    }
+    
+    /* Ajustes del Modal para iPhone */
+    .modal-content {
+        width: 95%; /* Que ocupe casi toda la pantalla a lo ancho */
+    }
+    .close-modal {
+        top: -35px;
+        right: 5px;
+        font-size: 35px;
+    }
+}
+
+/* --- Modal Styles --- */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 10; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+}
+
+.modal-content {
+    position: relative;
+    margin: auto;
+    padding: 0;
+    width: 80%;
+    max-width: 600px;
+    animation: zoomIn 0.3s ease-out;
+}
+
+#modal-image {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: block;
+}
+
+.close-modal {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+    line-height: 1;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+    color: var(--accent);
+    text-decoration: none;
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+@keyframes zoomIn {
+    from {transform: scale(0.8); opacity: 0;}
+    to {transform: scale(1); opacity: 1;}
+}
